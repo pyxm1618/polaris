@@ -1,0 +1,159 @@
+/* assets/css/main.css */
+
+/* 1. Global Reset & Variables */
+:root {
+  /* Ethereal Color Palette (Aurora) */
+  --bg-color: #0f172a; /* Deep Space Blue */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent-glow: rgba(56, 189, 248, 0.5); /* Sky Blue Glow */
+  --aurora-1: #4f46e5; /* Indigo */
+  --aurora-2: #ec4899; /* Pink */
+  --aurora-3: #10b981; /* Emerald */
+
+  /* Glassmorphism Constants */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-blur: 16px;
+  --glass-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+
+  /* Typography (Serif for headers, Sans for body) */
+  --font-serif: "Merriweather", "Georgia", serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+}
+
+/* 2. Utility Classes */
+
+/* The Glass Card */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  box-shadow: var(--glass-shadow);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Aurora Background Animation */
+.aurora-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  background: var(--bg-color);
+  overflow: hidden;
+}
+
+.aurora-blob {
+  position: absolute;
+  filter: blur(80px);
+  opacity: 0.4;
+  animation: float 20s infinite alternate;
+}
+
+.aurora-blob-1 {
+  top: -10%;
+  left: -10%;
+  width: 50vw;
+  height: 50vw;
+  background: var(--aurora-1);
+  animation-delay: 0s;
+}
+
+.aurora-blob-2 {
+  bottom: -10%;
+  right: -10%;
+  width: 60vw;
+  height: 60vw;
+  background: var(--aurora-2);
+  animation-delay: -5s;
+}
+
+.aurora-blob-3 {
+  top: 40%;
+  left: 40%;
+  width: 40vw;
+  height: 40vw;
+  background: var(--aurora-3);
+  animation-delay: -10s;
+}
+
+@keyframes float {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(30px, 50px) scale(1.1); }
+}
+
+/* Input Styles (Glass) */
+.glass-input {
+  background: rgba(255, 255, 255, 0.05); /* Slightly clearer */
+  border: 1px solid var(--glass-border);
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: var(--font-sans);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.glass-input:focus {
+  border-color: var(--accent-glow);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Button Styles */
+.btn-primary {
+  background: white;
+  color: var(--bg-color);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-glass:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
