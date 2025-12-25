@@ -1,8 +1,8 @@
 # Implementation Plan: MVP Core
 
 ## Phase 1: Foundation & Aesthetics
-- [/] Task: Initialize Nuxt 3 project (TypeScript)
-- [ ] Task: Install Dependencies (Clerk, Turso client, Lucide Icons)
+- [x] Task: Initialize Nuxt 3 project (TypeScript)
+- [/] Task: Install Dependencies (Clerk, Turso client, Lucide Icons)
 - [ ] Task: Setup Design System (Global CSS Variables, Fonts, Reset)
     *   Implement "Aurora" background animations.
     *   Define `.glass-card` utility classes.
