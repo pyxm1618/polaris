@@ -28,86 +28,69 @@ function toggle(id: string) {
 </script>
 
 <template>
-  <div class="pathway-grid">
+  <div class="selector-tabs">
     <button
-      v-for="item in pathways"
-      :key="item.id"
-      @click="toggle(item.id)"
-      class="pathway-card"
-      :class="{ 'active': modelValue.includes(item.id) }"
+      v-for="pathway in pathways"
+      :key="pathway.id"
+      @click="toggle(pathway.id)"
+      class="tab-item"
+      :class="{ 'active': modelValue.includes(pathway.id) }"
     >
-      <component 
-        :is="item.icon" 
-        class="icon"
-        :class="{ 'active': modelValue.includes(item.id) }"
-      />
-      <div class="card-title">{{ item.title }}</div>
-      <div class="card-desc">{{ item.desc }}</div>
+      <span class="tab-label">{{ pathway.title }}</span>
+      <!-- 选中时的底部光条 -->
+      <div v-if="modelValue.includes(pathway.id)" class="active-glow"></div>
     </button>
   </div>
 </template>
 
 <style scoped>
-.pathway-grid {
-  display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 0.75rem;
-}
-
-@media (min-width: 768px) {
-  .pathway-grid {
-    grid-template-columns: repeat(5, 1fr);
-  }
-}
-
-.pathway-card {
+.selector-tabs {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap; 
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.tab-item {
+  position: relative;
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem;
-  height: 5.5rem; /* compact height */
-  border-radius: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  background: rgba(255, 255, 255, 0.03); /* slightly more visible bg */
-  color: #94a3b8; /* slate-400 - lighter for better readability */
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px; /* Pill shape */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  color: #94a3b8; /* slate-400 */
+  font-weight: 500;
+  font-size: 0.95rem; /* Slightly larger text since no icon */
   transition: all 0.2s ease;
+  overflow: hidden;
   cursor: pointer;
 }
 
-.pathway-card:hover {
-  background: rgba(255, 255, 255, 0.1);
+.tab-item:hover {
+  background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.2);
-  color: #cbd5e1; /* slate-300 on hover */
-  transform: translateY(-1px);
+  color: #e2e8f0;
 }
 
-.pathway-card.active {
-  border-color: #60a5fa;
-  background: rgba(59, 130, 246, 0.15);
+.tab-item.active {
+  background: rgba(59, 130, 246, 0.15); /* blue-500/15 */
   color: white;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+  border-color: rgba(96, 165, 250, 0.5); /* blue-400/50 */
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.1);
 }
 
-.icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  margin-bottom: 0.25rem;
-  color: #475569; /* slate-600 */
-  transition: color 0.2s;
-}
-
-.icon.active {
-  color: #60a5fa; /* blue-400 */
-}
-
-.card-title {
-  font-size: 0.75rem; /* text-xs */
-  font-weight: 500;
-  margin-bottom: 0;
-}
-
-.card-desc {
-  display: none; /* Hide desc in compact mode to save space */
+.active-glow {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #60a5fa;
+  box-shadow: 0 -2px 8px #60a5fa;
 }
 </style>

@@ -47,12 +47,12 @@
             </p>
           </div>
 
-             <!-- 3. Bottom Section: Pathways & Context -->
-          <div class="w-full flex flex-col items-center gap-8" v-if="targetValue">
+                <!-- 3. Bottom Section: Pathways & Context -->
+          <div class="w-full flex flex-col items-center gap-12" v-if="targetValue">
              
              <!-- Pathway Selection -->
-             <div class="w-full flex flex-col items-center gap-4 animate-fade-in-up">
-                <label class="text-sm text-slate-500 uppercase tracking-wider font-medium">实现路径 (多选)</label>
+             <div class="w-full flex flex-col items-center gap-6 animate-fade-in-up">
+                <label class="text-sm text-slate-500 uppercase tracking-widest font-medium opacity-80">实现路径 (多选)</label>
                 <PathwaySelector v-model="pathways" :goal-type="goalType" />
              </div>
 
@@ -64,14 +64,15 @@
                     type="text"
                     class="details-input-simple"
                     placeholder="💡 补充一点细节？(例如：专注海外市场与 Nuxt)" 
+                    style="margin-bottom: 1rem;" 
                   />
                 </div>
              </div>
 
              <!-- Action Button -->
-             <div class="flex justify-center mt-4 animate-fade-in-up" style="animation-delay: 0.2s">
+             <div class="flex justify-center pb-8 animate-fade-in-up" style="animation-delay: 0.2s">
                 <button 
-                  class="btn btn-primary btn-xl rounded-full px-16 py-4 text-lg shadow-[0_0_30px_rgba(59,130,246,0.2)] hover:shadow-[0_0_50px_rgba(59,130,246,0.4)] transition-all transform hover:-translate-y-1 hover:scale-105 active:scale-95 flex items-center justify-center gap-3 min-w-[200px]" 
+                  class="btn btn-primary btn-xl rounded-full px-16 py-5 text-xl shadow-[0_0_30px_rgba(59,130,246,0.2)] hover:shadow-[0_0_50px_rgba(59,130,246,0.4)] transition-all transform hover:-translate-y-1 hover:scale-105 active:scale-95 flex items-center justify-center gap-3 min-w-[240px]" 
                   :disabled="!canProceed || loading"
                   @click="analyzeNorthStar"
                 >
