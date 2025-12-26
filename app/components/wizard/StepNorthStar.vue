@@ -48,15 +48,16 @@
           </div>
 
              <!-- 3. Bottom Section: Pathways & Context -->
-          <div class="w-full flex flex-col gap-6" v-if="targetValue">
-             <!-- Pathway Card -->
-             <div class="w-full bg-slate-900/40 border border-white/10 rounded-2xl p-6 transition-all duration-500 animate-fade-in-up backdrop-blur-sm">
-                <label class="block text-sm text-slate-400 mb-4 text-center uppercase tracking-wider font-semibold">实现路径 (多选)</label>
+          <div class="w-full flex flex-col items-center gap-8" v-if="targetValue">
+             
+             <!-- Pathway Selection -->
+             <div class="w-full flex flex-col items-center gap-4 animate-fade-in-up">
+                <label class="text-sm text-slate-500 uppercase tracking-wider font-medium">实现路径 (多选)</label>
                 <PathwaySelector v-model="pathways" :goal-type="goalType" />
              </div>
 
              <!-- Additional Details (Optional) -->
-             <div class="animate-fade-in-up" style="animation-delay: 0.1s">
+             <div class="w-full max-w-lg animate-fade-in-up" style="animation-delay: 0.1s">
                 <div class="flex justify-center">
                   <input 
                     v-model="additionalDetails"
@@ -68,14 +69,14 @@
              </div>
 
              <!-- Action Button -->
-             <div class="flex justify-center mt-2 animate-fade-in-up" style="animation-delay: 0.2s">
+             <div class="flex justify-center mt-4 animate-fade-in-up" style="animation-delay: 0.2s">
                 <button 
-                  class="btn btn-primary btn-xl rounded-full px-12 py-4 text-lg shadow-[0_0_30px_rgba(59,130,246,0.2)] hover:shadow-[0_0_50px_rgba(59,130,246,0.4)] transition-all transform hover:-translate-y-1 hover:scale-105 active:scale-95 flex items-center gap-3" 
+                  class="btn btn-primary btn-xl rounded-full px-16 py-4 text-lg shadow-[0_0_30px_rgba(59,130,246,0.2)] hover:shadow-[0_0_50px_rgba(59,130,246,0.4)] transition-all transform hover:-translate-y-1 hover:scale-105 active:scale-95 flex items-center justify-center gap-3 min-w-[200px]" 
                   :disabled="!canProceed || loading"
                   @click="analyzeNorthStar"
                 >
                   <span v-if="loading" class="animate-pulse">✨ AI 思考中...</span>
-                  <span v-else>生成 2025 年度规划 🚀</span>
+                  <span v-else>开始规划</span>
                 </button>
              </div>
           </div>
