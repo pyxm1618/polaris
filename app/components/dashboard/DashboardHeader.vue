@@ -66,7 +66,7 @@
       <div class="auth-section">
         <SignedOut>
           <SignInButton mode="modal">
-            <button class="btn btn-secondary btn-sm">
+            <button class="btn btn-primary btn-sm btn-login">
               登录 / 注册
             </button>
           </SignInButton>
@@ -233,5 +233,17 @@ const strokeDashoffset = computed(() => {
   display: flex;
   align-items: center;
   white-space: nowrap; /* Prevent button text wrap */
+}
+
+/* Force override for login button to ensure glass look */
+.btn-login {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  box-shadow: none !important;
+}
+
+.btn-login:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
 }
 </style>
