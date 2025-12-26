@@ -15,16 +15,16 @@
 
           <!-- Target Value Input -->
           <div class="form-group" v-if="goalType">
-            <div class="relative">
+            <div class="relative max-w-sm mx-auto">
               <input 
                 v-model="targetValue"
                 type="text" 
-                class="glass-input w-full"
+                class="glass-input w-full pr-12 text-center"
                 :placeholder="targetPlaceholder"
               />
-              <span class="absolute right-4 top-3 text-slate-500 text-sm">{{ targetUnit }}</span>
+              <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-medium">{{ targetUnit }}</span>
             </div>
-            <p v-if="targetHint" class="text-xs text-slate-500 mt-2 pl-1">💡 {{ targetHint }}</p>
+            <p v-if="targetHint" class="text-sm text-blue-200/80 mt-3 text-center">💡 {{ targetHint }}</p>
           </div>
 
           <!-- 2. Pathway -->

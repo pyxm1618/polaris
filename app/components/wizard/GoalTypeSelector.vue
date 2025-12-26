@@ -50,7 +50,6 @@ const goalTypes = [
     <button
       v-for="type in goalTypes"
       :key="type.id"
-      @click="emit('update:modelValue', type.id)"
       class="relative p-4 rounded-xl border transition-all duration-200 group hover:bg-white/10"
       :class="[
         modelValue === type.id 
