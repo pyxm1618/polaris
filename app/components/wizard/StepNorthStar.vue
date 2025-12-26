@@ -47,30 +47,35 @@
             </p>
           </div>
 
-          <!-- 3. Bottom Section: Pathways & Context -->
+             <!-- 3. Bottom Section: Pathways & Context -->
           <div class="w-full flex flex-col gap-6" v-if="targetValue">
+             <!-- Pathway Card -->
              <div class="w-full bg-slate-900/40 border border-white/10 rounded-2xl p-6 transition-all duration-500 animate-fade-in-up backdrop-blur-sm">
                 <label class="block text-sm text-slate-400 mb-4 text-center uppercase tracking-wider font-semibold">实现路径 (多选)</label>
                 <PathwaySelector v-model="pathways" :goal-type="goalType" />
-                
-                <div class="input-wrapper">
+             </div>
+
+             <!-- Additional Details (Optional) -->
+             <div class="animate-fade-in-up" style="animation-delay: 0.1s">
+                <div class="flex justify-center">
                   <input 
                     v-model="additionalDetails"
                     type="text"
-                    class="details-input"
-                    placeholder="补充一点细节？例如：专注海外市场，使用 Nuxt 技术栈..." 
+                    class="details-input-simple"
+                    placeholder="💡 补充一点细节？(例如：专注海外市场与 Nuxt)" 
                   />
                 </div>
              </div>
 
-             <div class="flex justify-center mt-4">
+             <!-- Action Button -->
+             <div class="flex justify-center mt-2 animate-fade-in-up" style="animation-delay: 0.2s">
                 <button 
-                  class="btn btn-primary btn-xl rounded-full px-12 py-4 text-lg shadow-[0_0_30px_rgba(59,130,246,0.2)] hover:shadow-[0_0_50px_rgba(59,130,246,0.4)] transition-all transform hover:-translate-y-1" 
+                  class="btn btn-primary btn-xl rounded-full px-12 py-4 text-lg shadow-[0_0_30px_rgba(59,130,246,0.2)] hover:shadow-[0_0_50px_rgba(59,130,246,0.4)] transition-all transform hover:-translate-y-1 hover:scale-105 active:scale-95 flex items-center gap-3" 
                   :disabled="!canProceed || loading"
                   @click="analyzeNorthStar"
                 >
-                  <span v-if="loading">✨ 分析中...</span>
-                  <span v-else>生成作战地图 →</span>
+                  <span v-if="loading" class="animate-pulse">✨ AI 思考中...</span>
+                  <span v-else>生成 2025 年度规划 🚀</span>
                 </button>
              </div>
           </div>
@@ -326,37 +331,33 @@ function calcDateFromQuarter(q: string, year: number): string {
   opacity: 1;
 }
 
-/* Details Input Styles */
-.input-wrapper {
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  display: flex;
-  justify-content: center;
-}
-
-.details-input {
+/* Details Input Styles (Simple) */
+.details-input-simple {
   width: 100%;
-  max-width: 32rem; /* max-w-lg */
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 9999px; /* rounded-full */
-  padding: 0.5rem 1.5rem;
+  max-width: 28rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  padding: 0.75rem 0.5rem;
   text-align: center;
-  color: #e2e8f0; /* slate-200 */
-  font-size: 0.875rem; /* text-sm */
+  color: #cbd5e1; /* slate-300 */
+  font-size: 0.95rem;
   transition: all 0.3s ease;
   outline: none;
 }
 
-.details-input::placeholder {
-  color: #64748b; /* slate-500 */
+.details-input-simple::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+  transition: color 0.3s;
 }
 
-.details-input:focus {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(59, 130, 246, 0.5); /* blue-500/50 */
-  box-shadow: 0 0 15px rgba(59, 130, 246, 0.1);
+.details-input-simple:focus {
+  border-bottom-color: #60a5fa;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.details-input-simple:focus::placeholder {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 /* Animations */
