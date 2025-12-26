@@ -46,32 +46,99 @@ const goalTypes = [
 </script>
 
 <template>
-  <div class="grid grid-cols-2 gap-4">
+  <div class="selector-grid">
     <button
       v-for="type in goalTypes"
       :key="type.id"
       @click="emit('update:modelValue', type.id)"
-      class="relative p-4 rounded-xl border transition-all duration-200 group hover:bg-slate-800/50"
-      :class="[
-        modelValue === type.id 
-          ? 'border-blue-400 bg-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.3)]' 
-          : 'border-white/10 bg-slate-900/40 text-slate-300 hover:border-white/20'
-      ]"
+      class="selector-card"
+      :class="{ 'active': modelValue === type.id }"
     >
-      <div 
-        class="mb-3 p-2 w-fit rounded-lg transition-colors"
-        :class="modelValue === type.id ? 'bg-blue-500 text-white' : 'bg-white/10 text-slate-300 group-hover:bg-white/20'"
-      >
-        <component :is="type.icon" class="w-5 h-5" />
+      <div class="icon-wrapper" :class="{ 'active': modelValue === type.id }">
+        <component :is="type.icon" class="icon" />
       </div>
       
-      <div class="font-medium mb-1" :class="modelValue === type.id ? 'text-white' : 'text-slate-200'">
+      <div class="card-title" :class="{ 'active': modelValue === type.id }">
         {{ type.title }}
       </div>
       
-      <div class="text-xs opacity-70" :class="modelValue === type.id ? 'text-blue-100' : 'text-slate-400'">
+      <div class="card-desc" :class="{ 'active': modelValue === type.id }">
         {{ type.desc }}
       </div>
     </button>
   </div>
 </template>
+
+<style scoped>
+.selector-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.selector-card {
+  position: relative;
+  padding: 1rem;
+  border-radius: 0.75rem; /* rounded-xl */
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.6); /* deeply dark bg */
+  text-align: left;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.selector-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.selector-card.active {
+  border-color: #60a5fa; /* blue-400 */
+  background: rgba(59, 130, 246, 0.2); /* blue-500/20 */
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+}
+
+.icon-wrapper {
+  margin-bottom: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: #cbd5e1; /* slate-300 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+}
+
+.icon-wrapper.active {
+  background: #3b82f6; /* blue-500 */
+  color: white;
+}
+
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.card-title {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  color: #e2e8f0; /* slate-200 */
+}
+
+.card-title.active {
+  color: white;
+}
+
+.card-desc {
+  font-size: 0.75rem;
+  color: #94a3b8; /* slate-400 */
+  opacity: 0.8;
+}
+
+.card-desc.active {
+  color: #dbeafe; /* blue-100 */
+}
+</style>

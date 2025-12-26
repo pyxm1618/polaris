@@ -28,25 +28,85 @@ function toggle(id: string) {
 </script>
 
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+  <div class="pathway-grid">
     <button
       v-for="item in pathways"
       :key="item.id"
       @click="toggle(item.id)"
-      class="flex flex-col items-center justify-center p-3 rounded-xl border transition-all duration-200 h-28 hover:bg-slate-800/50"
-      :class="[
-        modelValue.includes(item.id)
-          ? 'border-blue-400 bg-blue-500/20 text-white shadow-[0_0_15px_rgba(59,130,246,0.3)]'
-          : 'border-white/10 bg-slate-900/40 text-slate-300 hover:border-white/20'
-      ]"
+      class="pathway-card"
+      :class="{ 'active': modelValue.includes(item.id) }"
     >
       <component 
         :is="item.icon" 
-        class="w-6 h-6 mb-2"
-        :class="modelValue.includes(item.id) ? 'text-blue-400' : 'text-slate-400'" 
+        class="icon"
+        :class="{ 'active': modelValue.includes(item.id) }"
       />
-      <div class="text-sm font-medium mb-0.5">{{ item.title }}</div>
-      <div class="text-[10px] opacity-60 text-center leading-tight">{{ item.desc }}</div>
+      <div class="card-title">{{ item.title }}</div>
+      <div class="card-desc">{{ item.desc }}</div>
     </button>
   </div>
 </template>
+
+<style scoped>
+.pathway-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .pathway-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.pathway-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  height: 7rem; /* h-28 */
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.6); /* bg-slate-900/60 */
+  color: #94a3b8; /* slate-400 */
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.pathway-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.pathway-card.active {
+  border-color: #60a5fa;
+  background: rgba(59, 130, 246, 0.2);
+  color: white;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+}
+
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #64748b; /* slate-500 */
+}
+
+.icon.active {
+  color: #60a5fa; /* blue-400 */
+}
+
+.card-title {
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500;
+  margin-bottom: 0.125rem;
+}
+
+.card-desc {
+  font-size: 0.625rem; /* text-[10px] */
+  opacity: 0.6;
+  text-align: center;
+  line-height: 1.25;
+}
+</style>
