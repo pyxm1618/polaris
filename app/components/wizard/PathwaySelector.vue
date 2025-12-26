@@ -69,15 +69,16 @@ function toggle(id: string) {
   height: 5.5rem; /* compact height */
   border-radius: 0.75rem;
   border: 1px solid rgba(255, 255, 255, 0.05);
-  background: rgba(255, 255, 255, 0.02); /* very subtle bg */
-  color: #64748b; /* slate-500 */
+  background: rgba(255, 255, 255, 0.03); /* slightly more visible bg */
+  color: #94a3b8; /* slate-400 - lighter for better readability */
   transition: all 0.2s ease;
   cursor: pointer;
 }
 
 .pathway-card:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #cbd5e1; /* slate-300 on hover */
   transform: translateY(-1px);
 }
 

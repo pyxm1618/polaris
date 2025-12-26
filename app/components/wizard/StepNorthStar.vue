@@ -18,9 +18,12 @@
             <GoalTypeSelector v-model="goalType" />
           </div>
 
-          <!-- 2. Hero Input: Target Value -->
+            <!-- Hero Input: Target Value -->
           <div class="w-full" v-if="goalType">
             <div class="relative w-full max-w-2xl mx-auto group">
+              <!-- Label Hint -->
+              <div class="text-center text-slate-500 text-sm mb-2 uppercase tracking-widest font-medium">请输入目标数字</div>
+
               <!-- Input Field -->
               <input 
                 v-model="targetValue"
@@ -29,33 +32,32 @@
                 placeholder="0"
               />
               
-              <!-- Unit Suffix (Absolute Positioned) -->
+              <!-- Unit Suffix (Absolute Positioned via CSS) -->
               <span class="hero-unit" :class="{ 'has-value': targetValue.length > 0 }">
                 {{ targetUnit }}
               </span>
 
-              <!-- Bottom Line -->
-              <div class="absolute bottom-0 left-0 w-full h-[2px] bg-slate-700 group-hover:bg-slate-600 transition-colors"></div>
-              <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-blue-500 transition-all duration-300 group-focus-within:w-full"></div>
+              <!-- Decorative Underline -->
+               <div class="absolute bottom-4 left-1/4 right-1/4 h-[1px] bg-slate-700/50 group-hover:bg-slate-600/80 transition-colors"></div>
             </div>
 
             <!-- Context Helper / Hint -->
-            <p v-if="targetHint" class="text-center mt-6 text-slate-400 font-light tracking-wide">
+            <p v-if="targetHint" class="text-center mt-2 text-slate-400 font-light tracking-wide text-sm opacity-80">
                {{ targetHint }}
             </p>
           </div>
 
           <!-- 3. Bottom Section: Pathways & Context -->
           <div class="w-full flex flex-col gap-6" v-if="targetValue">
-             <div class="w-full bg-slate-900/30 border border-white/5 rounded-2xl p-6 transition-all duration-500 animate-fade-in-up">
-                <label class="block text-sm text-slate-400 mb-4 text-center uppercase tracking-wider">实现路径 (多选)</label>
+             <div class="w-full bg-slate-900/40 border border-white/10 rounded-2xl p-6 transition-all duration-500 animate-fade-in-up backdrop-blur-sm">
+                <label class="block text-sm text-slate-400 mb-4 text-center uppercase tracking-wider font-semibold">实现路径 (多选)</label>
                 <PathwaySelector v-model="pathways" :goal-type="goalType" />
                 
-                <div class="mt-6 pt-6 border-t border-white/5">
+                <div class="mt-6 pt-4 border-t border-white/5 flex justify-center">
                   <input 
                     v-model="additionalDetails"
                     type="text"
-                    class="w-full bg-transparent text-center text-slate-300 placeholder:text-slate-600 focus:outline-none"
+                    class="w-full max-w-lg bg-white/5 border border-white/10 rounded-full px-6 py-2 text-center text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all text-sm"
                     placeholder="补充一点细节？例如：专注海外市场，使用 Nuxt 技术栈..." 
                   />
                 </div>
