@@ -53,11 +53,11 @@
                 <label class="block text-sm text-slate-400 mb-4 text-center uppercase tracking-wider font-semibold">实现路径 (多选)</label>
                 <PathwaySelector v-model="pathways" :goal-type="goalType" />
                 
-                <div class="mt-6 pt-4 border-t border-white/5 flex justify-center">
+                <div class="input-wrapper">
                   <input 
                     v-model="additionalDetails"
                     type="text"
-                    class="w-full max-w-lg bg-white/5 border border-white/10 rounded-full px-6 py-2 text-center text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all text-sm"
+                    class="details-input"
                     placeholder="补充一点细节？例如：专注海外市场，使用 Nuxt 技术栈..." 
                   />
                 </div>
@@ -324,6 +324,39 @@ function calcDateFromQuarter(q: string, year: number): string {
 .hero-unit.has-value {
   color: #60a5fa;
   opacity: 1;
+}
+
+/* Details Input Styles */
+.input-wrapper {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: center;
+}
+
+.details-input {
+  width: 100%;
+  max-width: 32rem; /* max-w-lg */
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px; /* rounded-full */
+  padding: 0.5rem 1.5rem;
+  text-align: center;
+  color: #e2e8f0; /* slate-200 */
+  font-size: 0.875rem; /* text-sm */
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.details-input::placeholder {
+  color: #64748b; /* slate-500 */
+}
+
+.details-input:focus {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(59, 130, 246, 0.5); /* blue-500/50 */
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.1);
 }
 
 /* Animations */
