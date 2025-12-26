@@ -81,14 +81,30 @@
         </button>
       </div>
     </div>
+
+    <!-- Confirmation Modal -->
+    <ConfirmModal
+      :show="showConfirm"
+      :title="confirmTitle"
+      :message="confirmMessage"
+      @cancel="showConfirm = false"
+      @confirm="onConfirmAction"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useWizardStore } from '~/stores/wizard'
+import ConfirmModal from './ConfirmModal.vue'
 
 const wizardStore = useWizardStore()
 const weeklyHours = ref(wizardStore.draft?.preferences.weeklyHoursLimit || 20)
+
+// Confirm Modal State
+const showConfirm = ref(false)
+const confirmTitle = ref('')
+const confirmMessage = ref('')
+const pendingAction = ref<(() => void) | null>(null)
 
 // Watch changes and update store
 watch(weeklyHours, (val) => {
@@ -126,7 +142,7 @@ const feasibilityStatus = computed(() => {
 
 const feasibilityIcon = computed(() => {
   const map = { impossible: '🔴', hard: '🟠', medium: '🟡', good: '🟢' }
-  return map[feasibilityStatus.value]
+  return map[feasibilityStatus.value as keyof typeof map]
 })
 
 const feasibilityMessage = computed(() => {
@@ -136,7 +152,7 @@ const feasibilityMessage = computed(() => {
     medium: '这是一个适中的挑战，保持节奏可以按期完成。',
     good: '计划看起来非常稳健，你有很大机会提前完成！'
   }
-  return map[feasibilityStatus.value]
+  return map[feasibilityStatus.value as keyof typeof map]
 })
 
 // Timeline Visualization Mock
@@ -147,11 +163,30 @@ const quarters = computed(() => [
   { label: '6个月', percent: (26 / durationWeeks.value) * 100 > 100 ? 100 : (26 / durationWeeks.value) * 100 },
 ])
 
+const triggerConfirm = (title: string, message: string, action: () => void) => {
+  confirmTitle.value = title
+  confirmMessage.value = message
+  pendingAction.value = action
+  showConfirm.value = true
+}
+
+const onConfirmAction = () => {
+  if (pendingAction.value) {
+    pendingAction.value()
+  }
+  showConfirm.value = false
+}
+
 const confirmAndNext = async () => {
   if (feasibilityStatus.value === 'impossible') {
-    if (!confirm('这个计划看起来极具挑战性，确定要继续吗？建议回到上一步削减任务。')) {
-      return
-    }
+    triggerConfirm(
+      '挑战性确认',
+      '这个计划看起来极具挑战性（预计超过1年），确定要继续吗？建议回到上一步削减任务。',
+      async () => {
+        await wizardStore.nextStep()
+      }
+    )
+    return
   }
   await wizardStore.nextStep()
 }

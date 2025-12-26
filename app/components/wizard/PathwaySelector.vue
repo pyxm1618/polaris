@@ -1,6 +1,5 @@
 <script setup lang="ts">
-// Icons removed as per design change
-
+import { Code2, PenTool, Briefcase, Building2, Package } from 'lucide-vue-next'
 
 const props = defineProps<{
   modelValue: string[]

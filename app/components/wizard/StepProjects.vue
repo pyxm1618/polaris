@@ -122,6 +122,15 @@
         下一步 →
       </button>
     </div>
+
+    <!-- Confirmation Modal -->
+    <ConfirmModal
+      :show="showConfirm"
+      :title="confirmTitle"
+      :message="confirmMessage"
+      @cancel="showConfirm = false"
+      @confirm="onConfirmAction"
+    />
   </div>
 </template>
 
@@ -129,6 +138,7 @@
 import { useWizardStore } from '~/stores/wizard'
 import CreateProjectModal from './CreateProjectModal.vue'
 import SearchProjectModal from './SearchProjectModal.vue'
+import ConfirmModal from './ConfirmModal.vue'
 
 const wizardStore = useWizardStore()
 const toast = useToast()
@@ -136,6 +146,12 @@ const activeGoalId = ref<string | null>(null)
 const showAddMenu = ref(false)
 const showSearchModal = ref(false)
 const showCreateModal = ref(false)
+
+// Confirm Modal State
+const showConfirm = ref(false)
+const confirmTitle = ref('')
+const confirmMessage = ref('')
+const pendingAction = ref<(() => void) | null>(null)
 
 // Initialize: Set active goal to first one
 onMounted(() => {
@@ -146,9 +162,6 @@ onMounted(() => {
 
 const filteredProjects = computed(() => {
   if (!wizardStore.draft) return []
-  // If activeGoalId is set, show all projects? Or just linked ones?
-  // User Requirement: "Click Goal -> Highlight Linked". Usually shows ALL projects, highlighting links.
-  // But easier UI: Show ALL projects always, and show checkboxes to link/unlink for current goal.
   return wizardStore.draft.projects
 })
 
@@ -157,7 +170,6 @@ const getGoalProjectCount = (goalId: string) => {
 }
 
 const getDomainColor = (domain: string) => {
-  // Mock colors
   const colors: Record<string, string> = {
     product_design: '#8B5CF6',
     dev: '#3B82F6',
@@ -184,11 +196,7 @@ const handleAIRecommend = async () => {
 
   const goal = wizardStore.draft?.goals.find((g: any) => g.tempId === activeGoalId.value)
   if (!goal) return
-
-  // Call API (Mock for now, will implement real call)
-  // const { recommendations } = await $fetch('/api/wizard/ai/recommend-projects', ...)
   
-  // For now, let's create a Mock AI Project
   const newProject = {
     tempId: crypto.randomUUID(),
     name: `AI推荐项目 (${goal.title.slice(0, 5)}...)`,
@@ -219,8 +227,7 @@ const handleCreateProject = async (data: any) => {
 const handleSelectProject = async (project: any) => {
   showSearchModal.value = false
   
-  // Check if already added
-  const exists = wizardStore.draft?.projects.find((p: any) => p.name === project.name) // Simple check
+  const exists = wizardStore.draft?.projects.find((p: any) => p.name === project.name)
   if (exists) {
     if (activeGoalId.value && !exists.goalIds.includes(activeGoalId.value)) {
       exists.goalIds.push(activeGoalId.value)
@@ -259,23 +266,44 @@ const toggleLink = (projectId: string) => {
   wizardStore.saveDraft()
 }
 
-const removeProject = (projectId: string) => {
-  if (!confirm('确定移除该项目吗？') || !wizardStore.draft) return
-  const idx = wizardStore.draft.projects.findIndex((p: any) => p.tempId === projectId)
-  if (idx > -1) {
-    wizardStore.draft.projects.splice(idx, 1)
-    wizardStore.saveDraft()
+const triggerConfirm = (title: string, message: string, action: () => void) => {
+  confirmTitle.value = title
+  confirmMessage.value = message
+  pendingAction.value = action
+  showConfirm.value = true
+}
+
+const onConfirmAction = () => {
+  if (pendingAction.value) {
+    pendingAction.value()
   }
+  showConfirm.value = false
+}
+
+const removeProject = (projectId: string) => {
+  if (!wizardStore.draft) return
+  
+  triggerConfirm('删除项目', '确定移除该项目吗？此操作无法撤销。', () => {
+    const idx = wizardStore.draft!.projects.findIndex((p: any) => p.tempId === projectId)
+    if (idx > -1) {
+      wizardStore.draft!.projects.splice(idx, 1)
+      wizardStore.saveDraft()
+    }
+  })
 }
 
 const validateAndNext = async () => {
-  // Check if every goal has at least one project
   const unlinkedGoals = wizardStore.draft?.goals.filter((g: any) => getGoalProjectCount(g.tempId) === 0)
   
   if (unlinkedGoals && unlinkedGoals.length > 0) {
-    if (!confirm(`有 ${unlinkedGoals.length} 个目标未关联任何项目，是否继续？`)) {
-      return
-    }
+    triggerConfirm(
+      '存在未关联的目标', 
+      `有 ${unlinkedGoals.length} 个目标未关联任何项目，继续可能会导致规划不完整。是否仍然继续？`,
+      async () => {
+        await wizardStore.nextStep()
+      }
+    )
+    return
   }
   
   await wizardStore.nextStep()

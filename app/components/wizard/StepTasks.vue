@@ -121,16 +121,32 @@
       @confirm="handleAIGenerate"
       @cancel="showGenerateModal = false"
     />
+
+    <!-- Confirmation Modal -->
+    <ConfirmModal
+      :show="showConfirm"
+      :title="confirmTitle"
+      :message="confirmMessage"
+      @cancel="showConfirm = false"
+      @confirm="onConfirmAction"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useWizardStore } from '~/stores/wizard'
 import TaskGenerateModal from './TaskGenerateModal.vue'
+import ConfirmModal from './ConfirmModal.vue'
 
 const wizardStore = useWizardStore()
 const activeProjectId = ref<string | null>(null)
 const showGenerateModal = ref(false)
+
+// Confirm Modal State
+const showConfirm = ref(false)
+const confirmTitle = ref('')
+const confirmMessage = ref('')
+const pendingAction = ref<(() => void) | null>(null)
 
 const domains = [
   { label: '研发', value: 'dev' },
@@ -203,9 +219,6 @@ const handleAIGenerate = async (tasks: any[]) => {
   if (!activeProjectId.value || !wizardStore.draft) return
   showGenerateModal.value = false
   
-  // Clear existing or Append? Let's append but warn implementation later.
-  // For now, append.
-  
   const newTasks = tasks.map((t, i) => ({
     projectId: activeProjectId.value!,
     name: t.name,
@@ -219,14 +232,33 @@ const handleAIGenerate = async (tasks: any[]) => {
   await wizardStore.saveDraft()
 }
 
+const triggerConfirm = (title: string, message: string, action: () => void) => {
+  confirmTitle.value = title
+  confirmMessage.value = message
+  pendingAction.value = action
+  showConfirm.value = true
+}
+
+const onConfirmAction = () => {
+  if (pendingAction.value) {
+    pendingAction.value()
+  }
+  showConfirm.value = false
+}
+
 const validateAndNext = async () => {
   // Check if any project is empty
   const emptyProjects = wizardStore.draft?.projects.filter((p: any) => getProjectTaskCount(p.tempId) === 0)
   
   if (emptyProjects && emptyProjects.length > 0) {
-    if (!confirm(`${emptyProjects.length} 个项目尚未拆解任务，确定要跳过吗？`)) {
-      return
-    }
+    triggerConfirm(
+      '存在未拆解完的项目', 
+      `${emptyProjects.length} 个项目尚未拆解任务，可能会影响排期的准确性。是否仍然跳过？`,
+      async () => {
+        await wizardStore.nextStep()
+      }
+    )
+    return
   }
   
   await wizardStore.nextStep()

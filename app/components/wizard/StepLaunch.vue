@@ -65,7 +65,7 @@
       <div class="success-icon">🎉</div>
       <h3>计划已创建！</h3>
       <p>你的年度征程正式开始。</p>
-      <button class="btn btn-primary" @click="router.push('/')">
+      <button class="btn btn-primary" @click="handleFinish">
         进入 Dashboard
       </button>
     </div>
@@ -85,11 +85,6 @@ const success = ref(false)
 const handleLaunch = async () => {
   saving.value = true
   try {
-    // 1. Prepare data payload (if needed transformation, though api handles it)
-    // The store draft structure matches API expectation mostly, 
-    // but the API expects 'draft' as body or specific fields.
-    // Let's check save.post.ts. It expects { northStar, goals, projects, tasks } matches draft.
-    
     if (!wizardStore.draft) throw new Error('No draft data')
 
     await $fetch('/api/wizard/save', {
@@ -102,8 +97,8 @@ const handleLaunch = async () => {
       }
     })
 
-    // 2. Clear local draft (Store handles this or we call explicit clear)
-    wizardStore.resetDraft()
+    // Do NOT reset draft yet, wait for user to click "Go to Dashboard"
+    // The server side draft is deleted by the API already.
     
     // Simulate minimal delay for UX
     setTimeout(() => {
@@ -116,6 +111,11 @@ const handleLaunch = async () => {
     toast.error('保存失败，请重试')
     saving.value = false
   }
+}
+
+const handleFinish = () => {
+  wizardStore.resetDraft()
+  router.push('/dashboard')
 }
 </script>
 

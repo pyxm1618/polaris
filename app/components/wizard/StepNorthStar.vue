@@ -123,19 +123,12 @@
         </div>
       </div>
       
-      <div class="flex justify-center gap-6 mt-12 pb-8">
-        <button 
-          class="btn btn-secondary btn-lg rounded-full px-8 py-3 text-base flex items-center gap-2 hover:bg-white/10 transition-colors" 
-          @click="showGoals = false"
-        >
-          <span>←</span> 上一步
+      <div class="actions center">
+        <button type="button" class="btn btn-secondary" @click.prevent="showGoals = false">
+          ← 修改输入
         </button>
-        <button 
-          class="btn btn-primary btn-lg rounded-full px-12 py-3 text-base shadow-lg hover:shadow-blue-500/20 transition-all transform hover:-translate-y-1" 
-          @click="confirmGoals"
-        >
-          下一步
-          <span class="text-xs opacity-60 ml-1">({{ selectedIndices.length }})</span>
+        <button type="button" class="btn btn-primary btn-lg" @click.prevent="confirmGoals">
+          确认并继续 ({{ selectedIndices.length }})
         </button>
       </div>
     </div>
@@ -254,38 +247,54 @@ const confirmGoals = async () => {
     toast.warning('请至少选择一个目标')
     return
   }
-
-  // 计算今年的年份
-  const currentYear = new Date().getFullYear()
-
-  // Update Store
-  wizardStore.draft = {
-    ...wizardStore.draft!,
-    northStar: {
-      title: `[${goalType.value}] ${targetValue.value} - by ${pathways.value.join(',')}`,
-      year: currentYear
-    },
-    goals: selectedIndices.value.map((i: number) => {
-      const g = suggestedGoals.value[i]
-      if (!g) throw new Error('Goal data mismatch')
-      
-      return {
-        tempId: crypto.randomUUID(),
-        title: g.title,
-        targetDate: calcDateFromQuarter(g.target_date_quarter, currentYear),
-        reason: g.reason
-      }
-    }),
-    projects: wizardStore.draft?.projects || [],
-    tasks: wizardStore.draft?.tasks || [],
-    preferences: wizardStore.draft?.preferences || {
-      weeklyHoursLimit: 40,
-      maxParallelProjects: 3,
-      granularityPreference: 'day'
-    }
+  
+  // Safety check: ensure draft exists
+  if (!wizardStore.draft) {
+    console.warn('Draft missing, forcing reset')
+    wizardStore.resetDraft()
   }
 
-  await wizardStore.nextStep()
+  try {
+    // 计算今年的年份
+    const currentYear = new Date().getFullYear()
+
+    // Update Store
+    wizardStore.draft = {
+      ...wizardStore.draft!,
+      northStar: {
+        title: `[${goalType.value}] ${targetValue.value} - by ${pathways.value.join(',')}`,
+        year: currentYear
+      },
+      goals: selectedIndices.value.map((i: number) => {
+        const g = suggestedGoals.value[i]
+        // Guard against missing goal data
+        if (!g) {
+           console.error('Goal index mismatch', i, suggestedGoals.value)
+           throw new Error('Goal data mismatch')
+        }
+        
+        return {
+          tempId: crypto.randomUUID(),
+          title: g.title,
+          targetDate: calcDateFromQuarter(g.target_date_quarter, currentYear),
+          reason: g.reason
+        }
+      }),
+      // Preserve existing data or initialize
+      projects: wizardStore.draft?.projects || [],
+      tasks: wizardStore.draft?.tasks || [],
+      preferences: wizardStore.draft?.preferences || {
+        weeklyHoursLimit: 40,
+        maxParallelProjects: 3,
+        granularityPreference: 'day'
+      }
+    }
+
+    await wizardStore.nextStep()
+  } catch (err) {
+    console.error('Failed to confirm goals:', err)
+    toast.error('保存目标失败，请重试')
+  }
 }
 
 function calcDateFromQuarter(q: string, year: number): string {
@@ -300,7 +309,7 @@ function calcDateFromQuarter(q: string, year: number): string {
 
 <style scoped>
 .step-container {
-  max-width: 1200px;
+  max-width: 900px;
   margin: 0 auto;
   animation: fade-in 0.5s ease;
 }
