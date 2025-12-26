@@ -112,7 +112,12 @@
               @click.stop
             />
           </div>
-          <p class="goal-reason">{{ goal.reason }}</p>
+          <textarea 
+            v-model="goal.reason"
+            class="goal-reason-input"
+            rows="3"
+            @click.stop
+          ></textarea>
           <div class="check-icon">✓</div>
         </div>
 
@@ -474,11 +479,27 @@ function calcDateFromQuarter(q: string, year: number): string {
   outline: none;
 }
 
-.goal-reason {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.6);
+.goal-reason-input {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.875rem;
   line-height: 1.5;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  flex: 1;
+  resize: vertical;
+  font-family: inherit;
+  width: 100%;
 }
+
+.goal-reason-input:focus {
+  outline: none;
+  border-color: rgba(102, 126, 234, 0.5);
+  background: rgba(255, 255, 255, 0.03);
+}
+
 
 .check-icon {
   position: absolute;

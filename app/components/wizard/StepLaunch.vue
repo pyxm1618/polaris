@@ -113,9 +113,12 @@ const handleLaunch = async () => {
   }
 }
 
-const handleFinish = () => {
-  wizardStore.resetDraft()
-  router.push('/dashboard')
+const handleFinish = async () => {
+  await router.push('/dashboard')
+  // Reset draft after navigation completes to avoid flashing Step 1
+  setTimeout(() => {
+    wizardStore.resetDraft()
+  }, 100)
 }
 </script>
 
