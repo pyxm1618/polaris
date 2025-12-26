@@ -1,5 +1,5 @@
 {
-  "name": "temp_app",
+  "name": "polaris-conductor",
   "type": "module",
   "private": true,
   "scripts": {
@@ -11,10 +11,15 @@
   },
   "dependencies": {
     "@libsql/client": "^0.15.15",
+    "@pinia/nuxt": "^0.11.3",
     "lucide-vue-next": "^0.562.0",
     "nuxt": "^4.2.2",
+    "pinia": "^3.0.4",
     "vue": "^3.5.26",
     "vue-clerk": "^0.10.1",
     "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "dotenv": "^17.2.3"
   }
 }

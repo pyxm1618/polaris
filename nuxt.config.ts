@@ -6,6 +6,14 @@ export default defineNuxtConfig({
     '~/assets/css/main.css'
   ],
   modules: [
+    '@pinia/nuxt',
     // We will add clerk here later
-  ]
+  ],
+  runtimeConfig: {
+    deepseekApiKey: process.env.DEEPSEEK_API_KEY,
+    glmApiKey: process.env.GLM_API_KEY,
+    public: {
+      clerkPublishableKey: process.env.NUXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+    }
+  }
 })
