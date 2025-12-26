@@ -50,11 +50,12 @@ const goalTypes = [
     <button
       v-for="type in goalTypes"
       :key="type.id"
-      class="relative p-4 rounded-xl border transition-all duration-200 group hover:bg-white/10"
+      @click="emit('update:modelValue', type.id)"
+      class="relative p-4 rounded-xl border transition-all duration-200 group hover:bg-slate-800/50"
       :class="[
         modelValue === type.id 
           ? 'border-blue-400 bg-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.3)]' 
-          : 'border-white/10 bg-white/5 text-slate-300 hover:border-white/20'
+          : 'border-white/10 bg-slate-900/40 text-slate-300 hover:border-white/20'
       ]"
     >
       <div 

@@ -33,11 +33,11 @@ function toggle(id: string) {
       v-for="item in pathways"
       :key="item.id"
       @click="toggle(item.id)"
-      class="flex flex-col items-center justify-center p-3 rounded-xl border transition-all duration-200 h-28 hover:bg-white/10"
+      class="flex flex-col items-center justify-center p-3 rounded-xl border transition-all duration-200 h-28 hover:bg-slate-800/50"
       :class="[
         modelValue.includes(item.id)
           ? 'border-blue-400 bg-blue-500/20 text-white shadow-[0_0_15px_rgba(59,130,246,0.3)]'
-          : 'border-white/10 bg-white/5 text-slate-300 hover:border-white/20'
+          : 'border-white/10 bg-slate-900/40 text-slate-300 hover:border-white/20'
       ]"
     >
       <component 
