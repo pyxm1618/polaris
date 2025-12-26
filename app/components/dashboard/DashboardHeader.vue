@@ -6,7 +6,11 @@
       <h1 class="north-star-title">{{ stats?.northStar?.title || '尚未设定北极星' }}</h1>
       <div class="header-row">
         <div class="year-badge">{{ stats?.northStar?.year || new Date().getFullYear() }}</div>
-        <SignedOut v-if="!stats?.northStar">
+        <!-- TEMP: 暂时移除登录检查以便测试 -->
+        <NuxtLink v-if="!stats?.northStar" to="/wizard" class="btn btn-primary btn-sm">
+          ✨ 开启新规划
+        </NuxtLink>
+        <!-- <SignedOut v-if="!stats?.northStar">
           <SignInButton mode="modal">
             <button class="btn btn-primary btn-sm">✨ 开启新规划</button>
           </SignInButton>
@@ -15,7 +19,7 @@
           <NuxtLink to="/wizard" class="btn btn-primary btn-sm">
             ✨ 开启新规划
           </NuxtLink>
-        </SignedIn>
+        </SignedIn> -->
       </div>
     </div>
 

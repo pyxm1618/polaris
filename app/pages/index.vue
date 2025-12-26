@@ -44,7 +44,11 @@
         <div v-else-if="tasks.length === 0" class="empty-state">
           <div class="empty-icon">☕️</div>
           <p>当前列表没有任务</p>
-          <SignedOut>
+          <!-- TEMP: 暂时移除登录检查以便测试 -->
+          <NuxtLink to="/wizard" class="btn btn-primary btn-sm">
+            开启新规划
+          </NuxtLink>
+          <!-- <SignedOut>
             <SignInButton mode="modal" class="btn btn-primary btn-sm">
               开启新规划
             </SignInButton>
@@ -53,7 +57,7 @@
             <NuxtLink to="/wizard" class="btn btn-primary btn-sm">
               开启新规划
             </NuxtLink>
-          </SignedIn>
+          </SignedIn> -->
         </div>
 
         <div v-else class="tasks-container">
