@@ -1,10 +1,12 @@
 import { defineEventHandler, readBody } from 'h3'
 import { db } from '../../utils/db'
 import { randomUUID } from 'crypto'
+import { getUserId } from '../../utils/session'
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event)
-    const { userId, northStar, milestones, domains } = body
+    const { northStar, milestones, domains } = body
+    const userId = getUserId(event)
 
     if (!userId) {
         throw createError({ statusCode: 401, message: 'Unauthorized' })

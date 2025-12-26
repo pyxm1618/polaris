@@ -1,14 +1,20 @@
 import { defineEventHandler } from 'h3'
 import { db } from '../../utils/db'
+import { getUserId } from '../../utils/session'
 
 export default defineEventHandler(async (event) => {
+    const userId = getUserId(event)
+
     // 1. Fetch Active North Star
-    const northStarResult = await db.execute(`
-    SELECT * FROM goals 
-    WHERE status = 'active' 
-    ORDER BY created_at DESC 
-    LIMIT 1
-  `)
+    const northStarResult = await db.execute({
+        sql: `
+            SELECT * FROM goals 
+            WHERE status = 'active' AND user_id = ?
+            ORDER BY created_at DESC 
+            LIMIT 1
+  `,
+        args: [userId]
+    })
 
     const northStar = northStarResult.rows[0]
 

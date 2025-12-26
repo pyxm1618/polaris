@@ -115,8 +115,11 @@
     />
     
     <div class="actions-footer">
+      <button class="btn btn-secondary" @click="wizardStore.prevStep()">
+        ← 上一步
+      </button>
       <button class="btn btn-primary btn-lg" @click="validateAndNext">
-        确认映射，下一步 →
+        下一步 →
       </button>
     </div>
   </div>
@@ -571,7 +574,40 @@ const validateAndNext = async () => {
 .actions-footer {
   margin-top: 2rem;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+}
+
+.btn {
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-lg {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
 }
 
 .empty-state {

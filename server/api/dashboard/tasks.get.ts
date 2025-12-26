@@ -9,10 +9,11 @@
  */
 
 import { db } from '../../utils/db'
+import { getUserId } from '../../utils/session'
 
 export default defineEventHandler(async (event) => {
-    // TODO: 获取真实用户ID
-    const userId = 'temp_user_id'
+    // 获取真实用户ID
+    const userId = getUserId(event)
     const query = getQuery(event)
 
     // Params

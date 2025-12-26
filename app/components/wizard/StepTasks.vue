@@ -109,7 +109,7 @@
         ← 上一步
       </button>
       <button class="btn btn-primary btn-lg" @click="validateAndNext">
-        完成拆解，下一步 →
+        下一步 →
       </button>
     </div>
 

@@ -4,10 +4,11 @@
  */
 
 import { db } from '../../utils/db'
+import { getUserId } from '../../utils/session'
 
 export default defineEventHandler(async (event) => {
-    // TODO: 从Clerk获取user_id
-    const userId = 'temp_user_id' // 临时使用，待集成Clerk后替换
+    // 获取真实用户ID
+    const userId = getUserId(event)
 
     try {
         const result = await db.execute({

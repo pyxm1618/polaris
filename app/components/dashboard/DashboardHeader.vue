@@ -4,7 +4,12 @@
     <div class="north-star-section">
       <div class="label">我的年度北极星</div>
       <h1 class="north-star-title">{{ stats?.northStar?.title || '尚未设定北极星' }}</h1>
-      <div class="year-badge">{{ stats?.northStar?.year || new Date().getFullYear() }}</div>
+      <div class="header-row">
+        <div class="year-badge">{{ stats?.northStar?.year || new Date().getFullYear() }}</div>
+        <NuxtLink v-if="!stats?.northStar" to="/wizard" class="btn-new-plan">
+          ✨ 开启新规划
+        </NuxtLink>
+      </div>
     </div>
 
     <!-- Stats Grid -->
@@ -32,11 +37,27 @@
       <div class="progress-circle" :style="{ '--progress': progressPercent + '%' }">
         <div class="progress-text">{{ progressPercent }}%</div>
       </div>
+
+      <!-- Auth Section -->
+      <div class="auth-section">
+        <SignedOut>
+          <SignInButton mode="modal">
+            <button class="btn-login">
+              登录 / 注册
+            </button>
+          </SignInButton>
+        </SignedOut>
+        <SignedIn>
+          <UserButton after-sign-out-url="/" />
+        </SignedIn>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { SignedIn, SignedOut, SignInButton, UserButton } from 'vue-clerk'
+
 const props = defineProps<{
   stats: any
 }>()
@@ -151,5 +172,49 @@ const progressPercent = computed(() => {
   font-size: 0.9rem;
   font-weight: 700;
   color: white;
+}
+
+.auth-section {
+  margin-left: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.btn-login {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.btn-login:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-new-plan {
+  padding: 0.4rem 0.8rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-new-plan:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 </style>

@@ -6,6 +6,7 @@
  */
 
 import { db } from '../../utils/db'
+import { getUserId } from '../../utils/session'
 
 export default defineEventHandler(async (event) => {
     const { northStar, goals, projects, tasks } = await readBody(event)
@@ -17,8 +18,8 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    // TODO: 从Clerk获取user_id
-    const userId = 'temp_user_id'
+    // 获取当前用户ID
+    const userId = getUserId(event)
 
     try {
         const now = Math.floor(Date.now() / 1000)

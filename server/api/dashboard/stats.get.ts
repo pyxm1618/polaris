@@ -6,10 +6,10 @@
  */
 
 import { db } from '../../utils/db'
+import { getUserId } from '../../utils/session'
 
 export default defineEventHandler(async (event) => {
-    // TODO: 获取真实用户ID
-    const userId = 'temp_user_id'
+    const userId = getUserId(event)
 
     try {
         // 1. 获取最新的北极星指标
