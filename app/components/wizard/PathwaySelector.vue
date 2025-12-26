@@ -33,17 +33,17 @@ function toggle(id: string) {
       v-for="item in pathways"
       :key="item.id"
       @click="toggle(item.id)"
-      class="flex flex-col items-center justify-center p-3 rounded-xl border-2 transition-all duration-200 h-28"
+      class="flex flex-col items-center justify-center p-3 rounded-xl border transition-all duration-200 h-28 hover:bg-white/10"
       :class="[
         modelValue.includes(item.id)
-          ? 'border-blue-500 bg-blue-500/10 text-white shadow-lg shadow-blue-500/10'
-          : 'border-slate-800 bg-slate-900/30 text-slate-400 hover:border-slate-600 hover:bg-slate-800'
+          ? 'border-blue-400 bg-blue-500/20 text-white shadow-[0_0_15px_rgba(59,130,246,0.3)]'
+          : 'border-white/10 bg-white/5 text-slate-300 hover:border-white/20'
       ]"
     >
       <component 
         :is="item.icon" 
         class="w-6 h-6 mb-2"
-        :class="modelValue.includes(item.id) ? 'text-blue-400' : 'text-slate-500'" 
+        :class="modelValue.includes(item.id) ? 'text-blue-400' : 'text-slate-400'" 
       />
       <div class="text-sm font-medium mb-0.5">{{ item.title }}</div>
       <div class="text-[10px] opacity-60 text-center leading-tight">{{ item.desc }}</div>

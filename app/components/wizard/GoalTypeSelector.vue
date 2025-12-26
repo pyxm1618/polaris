@@ -51,16 +51,16 @@ const goalTypes = [
       v-for="type in goalTypes"
       :key="type.id"
       @click="emit('update:modelValue', type.id)"
-      class="relative p-4 rounded-xl border-2 text-left transition-all duration-200 group hover:border-blue-500/50 hover:bg-blue-50/5"
+      class="relative p-4 rounded-xl border transition-all duration-200 group hover:bg-white/10"
       :class="[
         modelValue === type.id 
-          ? 'border-blue-500 bg-blue-50/10 shadow-lg shadow-blue-500/10' 
-          : 'border-slate-800 bg-slate-900/50 text-slate-400'
+          ? 'border-blue-400 bg-blue-500/20 shadow-[0_0_15px_rgba(59,130,246,0.3)]' 
+          : 'border-white/10 bg-white/5 text-slate-300 hover:border-white/20'
       ]"
     >
       <div 
         class="mb-3 p-2 w-fit rounded-lg transition-colors"
-        :class="modelValue === type.id ? 'bg-blue-500 text-white' : 'bg-slate-800 group-hover:bg-slate-700'"
+        :class="modelValue === type.id ? 'bg-blue-500 text-white' : 'bg-white/10 text-slate-300 group-hover:bg-white/20'"
       >
         <component :is="type.icon" class="w-5 h-5" />
       </div>
@@ -69,7 +69,7 @@ const goalTypes = [
         {{ type.title }}
       </div>
       
-      <div class="text-xs opacity-70" :class="modelValue === type.id ? 'text-blue-200' : 'text-slate-500'">
+      <div class="text-xs opacity-70" :class="modelValue === type.id ? 'text-blue-100' : 'text-slate-400'">
         {{ type.desc }}
       </div>
     </button>
