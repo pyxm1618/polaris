@@ -46,99 +46,81 @@ const goalTypes = [
 </script>
 
 <template>
-  <div class="selector-grid">
+  <div class="selector-tabs">
     <button
       v-for="type in goalTypes"
       :key="type.id"
       @click="emit('update:modelValue', type.id)"
-      class="selector-card"
+      class="tab-item"
       :class="{ 'active': modelValue === type.id }"
     >
-      <div class="icon-wrapper" :class="{ 'active': modelValue === type.id }">
-        <component :is="type.icon" class="icon" />
-      </div>
+      <component :is="type.icon" class="icon" />
+      <span class="tab-label">{{ type.title }}</span>
       
-      <div class="card-title" :class="{ 'active': modelValue === type.id }">
-        {{ type.title }}
-      </div>
-      
-      <div class="card-desc" :class="{ 'active': modelValue === type.id }">
-        {{ type.desc }}
-      </div>
+      <!-- 选中时的底部光条 -->
+      <div v-if="modelValue === type.id" class="active-glow"></div>
     </button>
   </div>
 </template>
 
 <style scoped>
-.selector-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-}
-
-.selector-card {
-  position: relative;
-  padding: 1rem;
-  border-radius: 0.75rem; /* rounded-xl */
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(15, 23, 42, 0.6); /* deeply dark bg */
-  text-align: left;
-  transition: all 0.2s ease;
-  cursor: pointer;
+.selector-tabs {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.selector-card:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.selector-card.active {
-  border-color: #60a5fa; /* blue-400 */
-  background: rgba(59, 130, 246, 0.2); /* blue-500/20 */
-  box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
-}
-
-.icon-wrapper {
-  margin-bottom: 0.75rem;
+  justify-content: center;
+  gap: 0.5rem;
+  background: rgba(0, 0, 0, 0.2);
   padding: 0.5rem;
-  border-radius: 0.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  color: #cbd5e1; /* slate-300 */
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  width: fit-content;
+  margin: 0 auto; /* Center horizontally */
+}
+
+.tab-item {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: fit-content;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #94a3b8; /* slate-400 */
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
 
-.icon-wrapper.active {
-  background: #3b82f6; /* blue-500 */
+.tab-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #e2e8f0;
+}
+
+.tab-item.active {
+  background: rgba(255, 255, 255, 0.1);
   color: white;
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .icon {
   width: 1.25rem;
   height: 1.25rem;
+  opacity: 0.7;
 }
 
-.card-title {
-  font-weight: 500;
-  margin-bottom: 0.25rem;
-  color: #e2e8f0; /* slate-200 */
+.tab-item.active .icon {
+  opacity: 1;
+  color: #60a5fa; /* blue-400 */
 }
 
-.card-title.active {
-  color: white;
-}
-
-.card-desc {
-  font-size: 0.75rem;
-  color: #94a3b8; /* slate-400 */
-  opacity: 0.8;
-}
-
-.card-desc.active {
-  color: #dbeafe; /* blue-100 */
+.active-glow {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #60a5fa;
+  box-shadow: 0 -2px 10px #60a5fa;
 }
 </style>

@@ -2,68 +2,77 @@
   <div class="step-container">
     <!-- Phase 1: Structured Input -->
     <div v-if="!showGoals" class="input-phase">
-      <div class="glass-card main-card">
-        <h2 class="step-title">你的 2026 北极星 (North Star) 🌟</h2>
-        <p class="step-desc">让我们把模糊的愿景，变成清晰可执行的作战地图。</p>
+      <div class="glass-card main-card flex flex-col items-center justify-center min-h-[600px] relative overflow-hidden">
         
-        <div class="space-y-8 text-left">
-          <!-- 1. Goal Type -->
-          <div class="form-group">
-            <label class="section-label">1. 今年最核心的追求是？</label>
+        <!-- Decoration Background -->
+        <div class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
+          <div class="absolute top-[-20%] left-[20%] w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[100px]"></div>
+          <div class="absolute bottom-[-10%] right-[10%] w-[400px] h-[400px] bg-purple-500/10 rounded-full blur-[80px]"></div>
+        </div>
+
+        <div class="z-10 w-full max-w-4xl flex flex-col items-center gap-12">
+          
+          <!-- 1. Top Tabs: Goal Type -->
+          <div class="w-full flex flex-col items-center gap-4">
+            <h2 class="text-xl font-medium text-slate-300">2025年，你的核心目标是？</h2>
             <GoalTypeSelector v-model="goalType" />
           </div>
 
-          <!-- Target Value Input -->
-          <div class="form-group" v-if="goalType">
-            <div class="relative max-w-sm mx-auto">
+          <!-- 2. Hero Input: Target Value -->
+          <div class="w-full" v-if="goalType">
+            <div class="relative w-full max-w-2xl mx-auto group">
+              <!-- Input Field -->
               <input 
                 v-model="targetValue"
                 type="text" 
-                class="glass-input w-full pr-12 text-center"
-                :placeholder="targetPlaceholder"
+                class="hero-input"
+                placeholder="0"
               />
-              <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-medium">{{ targetUnit }}</span>
+              
+              <!-- Unit Suffix (Absolute Positioned) -->
+              <span class="hero-unit" :class="{ 'has-value': targetValue.length > 0 }">
+                {{ targetUnit }}
+              </span>
+
+              <!-- Bottom Line -->
+              <div class="absolute bottom-0 left-0 w-full h-[2px] bg-slate-700 group-hover:bg-slate-600 transition-colors"></div>
+              <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-[2px] bg-blue-500 transition-all duration-300 group-focus-within:w-full"></div>
             </div>
-            <p v-if="targetHint" class="text-sm text-blue-200/80 mt-3 text-center">💡 {{ targetHint }}</p>
+
+            <!-- Context Helper / Hint -->
+            <p v-if="targetHint" class="text-center mt-6 text-slate-400 font-light tracking-wide">
+               {{ targetHint }}
+            </p>
           </div>
 
-          <!-- 2. Pathway -->
-          <div class="form-group" v-if="goalType">
-            <label class="section-label">2. 计划靠什么实现？(多选)</label>
-            <PathwaySelector 
-              v-model="pathways" 
-              :goal-type="goalType" 
-            />
+          <!-- 3. Bottom Section: Pathways & Context -->
+          <div class="w-full flex flex-col gap-6" v-if="targetValue">
+             <div class="w-full bg-slate-900/30 border border-white/5 rounded-2xl p-6 transition-all duration-500 animate-fade-in-up">
+                <label class="block text-sm text-slate-400 mb-4 text-center uppercase tracking-wider">实现路径 (多选)</label>
+                <PathwaySelector v-model="pathways" :goal-type="goalType" />
+                
+                <div class="mt-6 pt-6 border-t border-white/5">
+                  <input 
+                    v-model="additionalDetails"
+                    type="text"
+                    class="w-full bg-transparent text-center text-slate-300 placeholder:text-slate-600 focus:outline-none"
+                    placeholder="补充一点细节？例如：专注海外市场，使用 Nuxt 技术栈..." 
+                  />
+                </div>
+             </div>
+
+             <div class="flex justify-center mt-4">
+                <button 
+                  class="btn btn-primary btn-xl rounded-full px-12 py-4 text-lg shadow-[0_0_30px_rgba(59,130,246,0.2)] hover:shadow-[0_0_50px_rgba(59,130,246,0.4)] transition-all transform hover:-translate-y-1" 
+                  :disabled="!canProceed || loading"
+                  @click="analyzeNorthStar"
+                >
+                  <span v-if="loading">✨ 分析中...</span>
+                  <span v-else>生成作战地图 →</span>
+                </button>
+             </div>
           </div>
 
-          <!-- 3. Additional Context -->
-          <div class="form-group" v-if="pathways.length > 0">
-             <label class="section-label">3. 补充说明 (选填)</label>
-             <textarea
-              v-model="additionalDetails"
-              class="glass-input w-full"
-              rows="2"
-              placeholder="例如：主要面向海外市场，准备使用 Nuxt 技术栈..."
-             ></textarea>
-          </div>
-        </div>
-
-        <!-- AI Thinking -->
-        <div v-if="loading" class="ai-interaction">
-          <div class="ai-thinking">
-            <span class="pulse-icon">✨</span> 
-            <span>正在分析你的画像与目标...</span>
-          </div>
-        </div>
-
-        <div class="actions center mt-8">
-          <button 
-            class="btn btn-primary btn-lg" 
-            :disabled="!canProceed || loading"
-            @click="analyzeNorthStar"
-          >
-            开始拆解 →
-          </button>
         </div>
       </div>
     </div>
@@ -280,101 +289,71 @@ function calcDateFromQuarter(q: string, year: number): string {
   animation: fade-in 0.5s ease;
 }
 
-.main-card {
-  padding: 3rem;
-  text-align: center;
-}
-
-.step-title {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.step-desc {
-  font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.6);
-  margin-bottom: 2rem;
-}
-
-.big-input {
+/* Hero Input Styles */
+.hero-input {
   width: 100%;
-  font-size: 1.25rem;
-  padding: 1.5rem;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+  background: transparent;
+  border: none;
+  font-size: 5rem;
+  font-weight: 700;
+  text-align: center;
   color: white;
+  padding: 1rem 4rem; /* Leave space for unit */
+  outline: none;
+  font-family: var(--font-sans);
+  line-height: 1.1;
+}
+
+.hero-input::placeholder {
+  color: rgba(255, 255, 255, 0.1);
+}
+
+.hero-unit {
+  position: absolute;
+  top: 50%;
+  right: 2rem;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  color: rgba(255, 255, 255, 0.3);
+  font-weight: 500;
   transition: all 0.3s ease;
 }
 
-.big-input:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
-  outline: none;
+.hero-unit.has-value {
+  color: #60a5fa;
+  opacity: 1;
 }
 
-.ai-interaction {
-  margin: 2rem 0;
-  min-height: 80px;
+/* Animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.ai-thinking {
-  color: #a5b4fc;
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.ai-clarification {
-  text-align: left;
-  background: rgba(102, 126, 234, 0.1);
-  border-radius: 12px;
-  padding: 1.5rem;
-  border: 1px solid rgba(102, 126, 234, 0.2);
+/* Utility Overrides for this component */
+.main-card {
+  padding: 2rem;
+  border: none; /* Clean look */
+  background: transparent;
+  box-shadow: none;
 }
 
-.ai-bubble {
-  margin-bottom: 1rem;
-}
-
-.ai-header {
-  font-size: 0.875rem;
-  color: #667eea;
+.btn-xl {
+  font-size: 1.25rem;
   font-weight: 600;
-  margin-bottom: 0.5rem;
+  letter-spacing: 0.02em;
 }
 
-.answer-input {
-  width: 100%;
-  padding: 0.75rem;
-  border-radius: 8px;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
-}
-
-.actions {
-  margin-top: 2rem;
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.btn-lg {
-  padding: 1rem 3rem;
-  font-size: 1.1rem;
-}
-
-/* Goals Phase */
+/* Goals Phase existing styles... */
 .goals-phase {
   text-align: center;
 }
+/* ... keep other necessary styles ... */
+
 
 .phase-header {
   margin-bottom: 3rem;

@@ -65,32 +65,35 @@ function toggle(id: string) {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem;
-  height: 7rem; /* h-28 */
+  padding: 0.5rem;
+  height: 5.5rem; /* compact height */
   border-radius: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(15, 23, 42, 0.6); /* bg-slate-900/60 */
-  color: #94a3b8; /* slate-400 */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.02); /* very subtle bg */
+  color: #64748b; /* slate-500 */
   transition: all 0.2s ease;
   cursor: pointer;
 }
 
 .pathway-card:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
 }
 
 .pathway-card.active {
   border-color: #60a5fa;
-  background: rgba(59, 130, 246, 0.2);
+  background: rgba(59, 130, 246, 0.15);
   color: white;
-  box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
 }
 
 .icon {
-  width: 1.5rem;
-  height: 1.5rem;
-  margin-bottom: 0.5rem;
-  color: #64748b; /* slate-500 */
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-bottom: 0.25rem;
+  color: #475569; /* slate-600 */
+  transition: color 0.2s;
 }
 
 .icon.active {
@@ -98,15 +101,12 @@ function toggle(id: string) {
 }
 
 .card-title {
-  font-size: 0.875rem; /* text-sm */
+  font-size: 0.75rem; /* text-xs */
   font-weight: 500;
-  margin-bottom: 0.125rem;
+  margin-bottom: 0;
 }
 
 .card-desc {
-  font-size: 0.625rem; /* text-[10px] */
-  opacity: 0.6;
-  text-align: center;
-  line-height: 1.25;
+  display: none; /* Hide desc in compact mode to save space */
 }
 </style>
