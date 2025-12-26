@@ -46,11 +46,11 @@
           <p>当前列表没有任务</p>
           <SignedOut>
             <SignInButton mode="modal">
-              <button class="btn btn-primary">✨ 开启新规划</button>
+              <button class="btn btn-primary btn-sm">✨ 开启新规划</button>
             </SignInButton>
           </SignedOut>
           <SignedIn>
-            <NuxtLink to="/wizard" class="btn btn-primary">
+            <NuxtLink to="/wizard" class="btn btn-primary btn-sm">
               ✨ 开启新规划
             </NuxtLink>
           </SignedIn>
