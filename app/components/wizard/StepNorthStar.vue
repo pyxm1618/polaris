@@ -300,7 +300,7 @@ function calcDateFromQuarter(q: string, year: number): string {
 
 <style scoped>
 .step-container {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
   animation: fade-in 0.5s ease;
 }
