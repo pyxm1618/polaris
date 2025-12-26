@@ -123,12 +123,19 @@
         </div>
       </div>
       
-      <div class="actions center">
-        <button class="btn btn-secondary" @click="showGoals = false">
-          ← 修改输入
+      <div class="flex justify-center gap-6 mt-12 pb-8">
+        <button 
+          class="btn btn-secondary btn-lg rounded-full px-8 py-3 text-base flex items-center gap-2 hover:bg-white/10 transition-colors" 
+          @click="showGoals = false"
+        >
+          <span>←</span> 上一步
         </button>
-        <button class="btn btn-primary btn-lg" @click="confirmGoals">
-          确认并继续 ({{ selectedIndices.length }})
+        <button 
+          class="btn btn-primary btn-lg rounded-full px-12 py-3 text-base shadow-lg hover:shadow-blue-500/20 transition-all transform hover:-translate-y-1" 
+          @click="confirmGoals"
+        >
+          下一步
+          <span class="text-xs opacity-60 ml-1">({{ selectedIndices.length }})</span>
         </button>
       </div>
     </div>
