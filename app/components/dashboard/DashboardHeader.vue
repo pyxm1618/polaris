@@ -108,12 +108,16 @@ const strokeDashoffset = computed(() => {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
+  gap: 2rem; /* Ensure specific gap between left and right sections */
 }
 
 .north-star-section {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  flex: 1; /* Allow taking available space */
+  min-width: 0; /* Crucial for text-overflow to work in flex child */
+  margin-right: 1rem;
 }
 
 .label {
@@ -121,16 +125,30 @@ const strokeDashoffset = computed(() => {
   color: rgba(255, 255, 255, 0.5);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  white-space: nowrap;
 }
 
 .north-star-title {
-  font-size: 2rem;
+  font-size: 1.75rem; /* Reduce slightly to accommodate long text */
   font-weight: 700;
   margin: 0;
   background: linear-gradient(90deg, #fff, #a5b4fc);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  
+  /* Modern line clamping */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.3;
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .year-badge {
@@ -141,12 +159,14 @@ const strokeDashoffset = computed(() => {
   border-radius: 4px;
   font-size: 0.75rem;
   width: fit-content;
+  white-space: nowrap;
 }
 
 .stats-grid {
   display: flex;
   align-items: center;
   gap: 2rem;
+  flex-shrink: 0; /* CRITICAL: Prevent stats from being squashed */
 }
 
 .stat-item {
@@ -168,6 +188,7 @@ const strokeDashoffset = computed(() => {
 .stat-label {
   font-size: 0.75rem;
   color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap; /* Prevent vertical stacking of text */
 }
 
 .stat-divider {
@@ -184,6 +205,7 @@ const strokeDashoffset = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .ring-svg {
@@ -210,6 +232,6 @@ const strokeDashoffset = computed(() => {
   margin-left: 1rem;
   display: flex;
   align-items: center;
+  white-space: nowrap; /* Prevent button text wrap */
 }
-
 </style>
