@@ -11,6 +11,28 @@ import { getUserId } from '../../utils/session'
 export default defineEventHandler(async (event) => {
     const userId = getUserId(event)
 
+    // 未登录用户：返回空数据
+    if (!userId) {
+        const now = new Date()
+        const currentYear = now.getFullYear()
+        const endOfYear = new Date(currentYear, 11, 31)
+        const daysLeft = Math.ceil((endOfYear.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+        const totalDays = 365 + (currentYear % 4 === 0 ? 1 : 0)
+        const yearProgress = Math.round(((totalDays - daysLeft) / totalDays) * 100)
+
+        return {
+            northStar: null,
+            stats: {
+                totalGoals: 0,
+                totalProjects: 0,
+                totalTasks: 0,
+                completedTasks: 0,
+                totalHours: 0
+            },
+            time: { daysLeft, yearProgress }
+        }
+    }
+
     try {
         // 1. 获取最新的北极星指标
         const { rows: northStars } = await db.execute({
@@ -79,3 +101,4 @@ export default defineEventHandler(async (event) => {
         })
     }
 })
+

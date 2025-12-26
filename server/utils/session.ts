@@ -4,7 +4,7 @@
  */
 import { H3Event } from 'h3'
 
-export const getUserId = (event: H3Event): string => {
+export const getUserId = (event: H3Event): string | null => {
     // 1. Try to get from custom header (passed by frontend)
     const headerUserId = getHeader(event, 'x-user-id')
     if (headerUserId) {
@@ -15,7 +15,7 @@ export const getUserId = (event: H3Event): string => {
     // const { userId } = event.context.auth
     // if (userId) return userId
 
-    // 3. Fallback for unauthenticated / dev
-    // In production, this should ideally be strict or return null
-    return 'temp_user_id'
+    // 3. Unauthenticated user: return null (standard practice)
+    return null
 }
+

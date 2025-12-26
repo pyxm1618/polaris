@@ -14,6 +14,12 @@ import { getUserId } from '../../utils/session'
 export default defineEventHandler(async (event) => {
     // 获取真实用户ID
     const userId = getUserId(event)
+
+    // 未登录用户：返回空数组
+    if (!userId) {
+        return { tasks: [] }
+    }
+
     const query = getQuery(event)
 
     // Params
@@ -74,3 +80,4 @@ export default defineEventHandler(async (event) => {
         })
     }
 })
+

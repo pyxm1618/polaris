@@ -10,6 +10,11 @@ export default defineEventHandler(async (event) => {
     // 获取真实用户ID
     const userId = getUserId(event)
 
+    // 未登录用户：返回空数组
+    if (!userId) {
+        return { projects: [] }
+    }
+
     const query = getQuery(event)
     const search = query.search as string | undefined
 
@@ -45,3 +50,4 @@ export default defineEventHandler(async (event) => {
         })
     }
 })
+
