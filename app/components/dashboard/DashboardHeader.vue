@@ -8,11 +8,11 @@
         <div class="year-badge">{{ stats?.northStar?.year || new Date().getFullYear() }}</div>
         <SignedOut v-if="!stats?.northStar">
           <SignInButton mode="modal">
-            <button class="btn-new-plan">✨ 开启新规划</button>
+            <button class="btn btn-primary btn-sm">✨ 开启新规划</button>
           </SignInButton>
         </SignedOut>
         <SignedIn v-if="!stats?.northStar">
-          <NuxtLink to="/wizard" class="btn-new-plan">
+          <NuxtLink to="/wizard" class="btn btn-primary btn-sm">
             ✨ 开启新规划
           </NuxtLink>
         </SignedIn>
@@ -40,8 +40,25 @@
         <div class="stat-label">已完成</div>
       </div>
 
-      <!-- Progress Circle (Simple CSS implementation) -->
-      <div class="progress-circle" :style="{ '--progress': progressPercent + '%' }">
+      <!-- Progress Circle (SVG) -->
+      <div class="progress-ring">
+        <svg class="ring-svg" width="60" height="60" viewBox="0 0 60 60">
+          <circle 
+            class="ring-bg" 
+            cx="30" cy="30" r="26" 
+            fill="none" 
+            stroke-width="6"
+          />
+          <circle 
+            class="ring-progress" 
+            cx="30" cy="30" r="26" 
+            fill="none" 
+            stroke-width="6"
+            stroke-linecap="round"
+            :stroke-dasharray="circumference"
+            :stroke-dashoffset="strokeDashoffset"
+          />
+        </svg>
         <div class="progress-text">{{ progressPercent }}%</div>
       </div>
 
@@ -49,7 +66,7 @@
       <div class="auth-section">
         <SignedOut>
           <SignInButton mode="modal">
-            <button class="btn-login">
+            <button class="btn btn-secondary btn-sm">
               登录 / 注册
             </button>
           </SignInButton>
@@ -72,6 +89,12 @@ const props = defineProps<{
 const progressPercent = computed(() => {
   if (!props.stats?.stats?.totalTasks) return 0
   return Math.round((props.stats.stats.completedTasks / props.stats.stats.totalTasks) * 100)
+})
+
+const radius = 26
+const circumference = 2 * Math.PI * radius
+const strokeDashoffset = computed(() => {
+  return circumference - (progressPercent.value / 100) * circumference
 })
 </script>
 
@@ -153,29 +176,31 @@ const progressPercent = computed(() => {
   background: rgba(255, 255, 255, 0.1);
 }
 
-/* Progress Circle */
-.progress-circle {
+/* Progress Ring */
+.progress-ring {
+  position: relative;
   width: 60px;
   height: 60px;
-  border-radius: 50%;
-  background: conic-gradient(#667eea var(--progress), rgba(255, 255, 255, 0.1) 0deg);
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
 }
 
-.progress-circle::before {
-  content: '';
-  position: absolute;
-  width: 52px;
-  height: 52px;
-  background: #1e1e28; /* Match bg color approximately */
-  border-radius: 50%;
+.ring-svg {
+  transform: rotate(-90deg);
+}
+
+.ring-bg {
+  stroke: rgba(255, 255, 255, 0.1);
+}
+
+.ring-progress {
+  stroke: #667eea;
+  transition: stroke-dashoffset 0.5s ease;
 }
 
 .progress-text {
-  position: relative;
+  position: absolute;
   font-size: 0.9rem;
   font-weight: 700;
   color: white;
@@ -187,41 +212,4 @@ const progressPercent = computed(() => {
   align-items: center;
 }
 
-.btn-login {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-weight: 500;
-}
-
-.btn-login:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-1px);
-}
-
-.header-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.btn-new-plan {
-  padding: 0.4rem 0.8rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-radius: 6px;
-  text-decoration: none;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-.btn-new-plan:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-}
 </style>

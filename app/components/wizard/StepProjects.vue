@@ -131,6 +131,7 @@ import CreateProjectModal from './CreateProjectModal.vue'
 import SearchProjectModal from './SearchProjectModal.vue'
 
 const wizardStore = useWizardStore()
+const toast = useToast()
 const activeGoalId = ref<string | null>(null)
 const showAddMenu = ref(false)
 const showSearchModal = ref(false)
@@ -179,7 +180,7 @@ const getDomainName = (domain: string) => {
 
 const handleAIRecommend = async () => {
   showAddMenu.value = false
-  if (!activeGoalId.value) return alert('请先选择一个目标')
+  if (!activeGoalId.value) return toast.warning('请先选择一个目标')
 
   const goal = wizardStore.draft?.goals.find((g: any) => g.tempId === activeGoalId.value)
   if (!goal) return
@@ -224,9 +225,9 @@ const handleSelectProject = async (project: any) => {
     if (activeGoalId.value && !exists.goalIds.includes(activeGoalId.value)) {
       exists.goalIds.push(activeGoalId.value)
       await wizardStore.saveDraft()
-      alert('已关联已有项目')
+      toast.success('已关联已有项目')
     } else {
-      alert('该项目已在列表中')
+      toast.warning('该项目已在列表中')
     }
     return
   }

@@ -9,6 +9,7 @@
   <!-- Main Content Area -->
   <div class="layout-container">
     <NuxtPage />
+    <UiToastContainer />
   </div>
 </template>
 

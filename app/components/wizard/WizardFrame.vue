@@ -25,6 +25,7 @@ import DraftModal from './DraftModal.vue'
 
 const wizardStore = useWizardStore()
 const router = useRouter()
+const toast = useToast()
 const showDraftModal = ref(false)
 
 onMounted(async () => {
@@ -51,7 +52,7 @@ const handleFinish = async () => {
     router.push('/dashboard')
   } catch (error) {
     console.error('[Wizard Finish Error]', error)
-    alert('保存失败，请重试')
+    toast.error('保存失败，请重试')
   }
 }
 </script>

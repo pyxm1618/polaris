@@ -121,6 +121,7 @@ const emit = defineEmits<{
   (e: 'cancel'): void
 }>()
 
+const toast = useToast()
 const loading = ref(false)
 const newFeature = ref('')
 
@@ -150,7 +151,7 @@ const addCustomFeature = () => {
 
 const handleGenerate = async () => {
   if (form.features.length === 0) {
-    alert('请至少选择或输入一个功能模块')
+    toast.warning('请至少选择或输入一个功能模块')
     return
   }
 
@@ -169,7 +170,7 @@ const handleGenerate = async () => {
     emit('confirm', tasks)
   } catch (error) {
     console.error(error)
-    alert('生成失败，请重试')
+    toast.error('生成失败，请重试')
   } finally {
     loading.value = false
   }

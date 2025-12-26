@@ -78,6 +78,7 @@ import { useRouter } from 'vue-router'
 
 const wizardStore = useWizardStore()
 const router = useRouter()
+const toast = useToast()
 const saving = ref(false)
 const success = ref(false)
 
@@ -112,7 +113,7 @@ const handleLaunch = async () => {
 
   } catch (error) {
     console.error(error)
-    alert('保存失败，请重试')
+    toast.error('保存失败，请重试')
     saving.value = false
   }
 }

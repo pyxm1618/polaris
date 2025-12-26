@@ -101,6 +101,7 @@
 import { useWizardStore } from '~/stores/wizard'
 
 const wizardStore = useWizardStore()
+const toast = useToast()
 const northStar = ref(wizardStore.draft?.northStar?.title || '')
 const clarificationAnswer = ref('')
 const loading = ref(false)
@@ -162,7 +163,7 @@ const analyzeNorthStar = async () => {
 
   } catch (error) {
     console.error(error)
-    alert('AI思考超时，请重试')
+    toast.error('AI思考超时，请重试')
   } finally {
     loading.value = false
   }
@@ -187,7 +188,7 @@ const addCustomGoal = () => {
 
 const confirmGoals = async () => {
   if (selectedIndices.value.length === 0) {
-    alert('请至少选择一个目标')
+    toast.warning('请至少选择一个目标')
     return
   }
 
@@ -355,6 +356,9 @@ function calcDateFromQuarter(q: string, year: number): string {
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
   position: relative;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
 }
 
 .goal-card:hover {
@@ -434,6 +438,7 @@ function calcDateFromQuarter(q: string, year: number): string {
   justify-content: center;
   border-style: dashed;
   color: rgba(255, 255, 255, 0.5);
+  min-height: 200px;
 }
 
 .add-card:hover {
