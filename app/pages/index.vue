@@ -45,8 +45,8 @@
           <div class="empty-icon">☕️</div>
           <p>当前列表没有任务</p>
           <SignedOut>
-            <SignInButton mode="modal">
-              <span class="btn btn-primary btn-sm">开启新规划</span>
+            <SignInButton mode="modal" class="btn btn-primary btn-sm">
+              开启新规划
             </SignInButton>
           </SignedOut>
           <SignedIn>

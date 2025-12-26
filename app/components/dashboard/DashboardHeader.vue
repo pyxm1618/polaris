@@ -65,10 +65,8 @@
       <!-- Auth Section -->
       <div class="auth-section">
         <SignedOut>
-          <SignInButton mode="modal">
-            <button class="btn btn-primary btn-sm btn-login">
-              登录 / 注册
-            </button>
+          <SignInButton mode="modal" class="btn btn-primary btn-sm">
+            登录 / 注册
           </SignInButton>
         </SignedOut>
         <SignedIn>
@@ -235,15 +233,5 @@ const strokeDashoffset = computed(() => {
   white-space: nowrap; /* Prevent button text wrap */
 }
 
-/* Force override for login button to ensure glass look */
-.btn-login {
-  background: rgba(255, 255, 255, 0.1) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  color: white !important;
-  box-shadow: none !important;
-}
-
-.btn-login:hover {
-  background: rgba(255, 255, 255, 0.2) !important;
-}
+/* Force override removed as proper structure is restored */
 </style>
