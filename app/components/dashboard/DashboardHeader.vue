@@ -6,9 +6,16 @@
       <h1 class="north-star-title">{{ stats?.northStar?.title || '尚未设定北极星' }}</h1>
       <div class="header-row">
         <div class="year-badge">{{ stats?.northStar?.year || new Date().getFullYear() }}</div>
-        <NuxtLink v-if="!stats?.northStar" to="/wizard" class="btn-new-plan">
-          ✨ 开启新规划
-        </NuxtLink>
+        <SignedOut v-if="!stats?.northStar">
+          <SignInButton mode="modal">
+            <button class="btn-new-plan">✨ 开启新规划</button>
+          </SignInButton>
+        </SignedOut>
+        <SignedIn v-if="!stats?.northStar">
+          <NuxtLink to="/wizard" class="btn-new-plan">
+            ✨ 开启新规划
+          </NuxtLink>
+        </SignedIn>
       </div>
     </div>
 

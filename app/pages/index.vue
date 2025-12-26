@@ -44,9 +44,16 @@
         <div v-else-if="tasks.length === 0" class="empty-state">
           <div class="empty-icon">☕️</div>
           <p>当前列表没有任务</p>
-          <NuxtLink to="/wizard" class="btn-start-wizard">
-            ✨ 开启新规划
-          </NuxtLink>
+          <SignedOut>
+            <SignInButton mode="modal">
+              <button class="btn-start-wizard">✨ 开启新规划</button>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <NuxtLink to="/wizard" class="btn-start-wizard">
+              ✨ 开启新规划
+            </NuxtLink>
+          </SignedIn>
         </div>
 
         <div v-else class="tasks-container">
@@ -66,6 +73,7 @@
 import DashboardHeader from '~/components/dashboard/DashboardHeader.vue'
 import ProjectSidebar from '~/components/dashboard/ProjectSidebar.vue'
 import TaskItem from '~/components/dashboard/TaskItem.vue'
+import { SignedIn, SignedOut, SignInButton } from 'vue-clerk'
 
 // Data Refs
 const stats = ref<any>(null)

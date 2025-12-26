@@ -99,10 +99,11 @@ export default defineEventHandler(async (event) => {
 
         return { success: true, northStarId }
     } catch (error) {
-        console.error('[Wizard Save Error]', error)
+        console.error('[Wizard Save Error]', error instanceof Error ? error.message : error)
+        console.error('[Wizard Save Error Stack]', error instanceof Error ? error.stack : '')
         throw createError({
             statusCode: 500,
-            message: '保存失败'
+            message: error instanceof Error ? `保存失败: ${error.message}` : '保存失败'
         })
     }
 })
