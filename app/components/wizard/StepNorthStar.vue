@@ -1,51 +1,68 @@
 <template>
   <div class="step-container">
-    <!-- Phase 1: Input North Star -->
+    <!-- Phase 1: Structured Input -->
     <div v-if="!showGoals" class="input-phase">
       <div class="glass-card main-card">
         <h2 class="step-title">你的 2026 北极星 (North Star) 🌟</h2>
-        <p class="step-desc">如果不考虑现实限制，你今年最想达成的一件事是什么？</p>
+        <p class="step-desc">让我们把模糊的愿景，变成清晰可执行的作战地图。</p>
         
-        <div class="input-group">
-          <textarea
-            v-model="northStar"
-            class="glass-input big-input"
-            placeholder="例如：做一款月入$1000的独立产品..."
-            rows="3"
-            :disabled="loading"
-            @keyup.enter.ctrl="analyzeNorthStar"
-          ></textarea>
-        </div>
-
-        <!-- AI Thinking / Clarification -->
-        <div v-if="loading || clarification" class="ai-interaction">
-          <div v-if="loading" class="ai-thinking">
-            <span class="pulse-icon">✨</span> AI正在思考...
+        <div class="space-y-8 text-left">
+          <!-- 1. Goal Type -->
+          <div class="form-group">
+            <label class="section-label">1. 今年最核心的追求是？</label>
+            <GoalTypeSelector v-model="goalType" />
           </div>
-          
-          <div v-else-if="clarification" class="ai-clarification">
-            <div class="ai-bubble">
-              <div class="ai-header">🤖 需要一点澄清</div>
-              <p>{{ clarification }}</p>
+
+          <!-- Target Value Input -->
+          <div class="form-group" v-if="goalType">
+            <div class="relative">
+              <input 
+                v-model="targetValue"
+                type="text" 
+                class="glass-input w-full"
+                :placeholder="targetPlaceholder"
+              />
+              <span class="absolute right-4 top-3 text-slate-500 text-sm">{{ targetUnit }}</span>
             </div>
-            
-            <input 
-              v-model="clarificationAnswer"
-              class="glass-input answer-input"
-              placeholder="回答AI的提问..."
-              @keyup.enter="analyzeNorthStar"
-              autoFocus
+            <p v-if="targetHint" class="text-xs text-slate-500 mt-2 pl-1">💡 {{ targetHint }}</p>
+          </div>
+
+          <!-- 2. Pathway -->
+          <div class="form-group" v-if="goalType">
+            <label class="section-label">2. 计划靠什么实现？(多选)</label>
+            <PathwaySelector 
+              v-model="pathways" 
+              :goal-type="goalType" 
             />
           </div>
+
+          <!-- 3. Additional Context -->
+          <div class="form-group" v-if="pathways.length > 0">
+             <label class="section-label">3. 补充说明 (选填)</label>
+             <textarea
+              v-model="additionalDetails"
+              class="glass-input w-full"
+              rows="2"
+              placeholder="例如：主要面向海外市场，准备使用 Nuxt 技术栈..."
+             ></textarea>
+          </div>
         </div>
 
-        <div class="actions">
+        <!-- AI Thinking -->
+        <div v-if="loading" class="ai-interaction">
+          <div class="ai-thinking">
+            <span class="pulse-icon">✨</span> 
+            <span>正在分析你的画像与目标...</span>
+          </div>
+        </div>
+
+        <div class="actions center mt-8">
           <button 
             class="btn btn-primary btn-lg" 
-            :disabled="!northStar.trim() || loading"
+            :disabled="!canProceed || loading"
             @click="analyzeNorthStar"
           >
-            {{ clarification ? '提交回答' : '下一步' }} →
+            开始拆解 →
           </button>
         </div>
       </div>
@@ -54,8 +71,11 @@
     <!-- Phase 2: Select Goals -->
     <div v-else class="goals-phase">
       <div class="phase-header">
+        <div class="profile-badge mb-4" v-if="inferredProfile">
+           🤖 识别为: <span class="text-blue-300 font-bold">{{ inferredProfile }}</span>
+        </div>
         <h2>为你拆解的季度目标</h2>
-        <p>基于你的愿景，建议关注以下关键节点（可修改）</p>
+        <p>基于你的独立开发画像，我们建议关注以下关键节点</p>
       </div>
 
       <div class="goals-grid">
@@ -84,10 +104,10 @@
           <span>添加自定义目标</span>
         </div>
       </div>
-
+      
       <div class="actions center">
         <button class="btn btn-secondary" @click="showGoals = false">
-          ← 修改愿景
+          ← 修改输入
         </button>
         <button class="btn btn-primary btn-lg" @click="confirmGoals">
           确认并继续 ({{ selectedIndices.length }})
@@ -99,14 +119,22 @@
 
 <script setup lang="ts">
 import { useWizardStore } from '~/stores/wizard'
+import GoalTypeSelector from './GoalTypeSelector.vue'
+import PathwaySelector from './PathwaySelector.vue'
 
 const wizardStore = useWizardStore()
 const toast = useToast()
-const northStar = ref(wizardStore.draft?.northStar?.title || '')
-const clarificationAnswer = ref('')
+
+// Structured Inputs
+const goalType = ref('revenue')
+const targetValue = ref('')
+const pathways = ref<string[]>([])
+const additionalDetails = ref('')
+
+// State
 const loading = ref(false)
-const clarification = ref<string | null>(null)
 const showGoals = ref(false)
+const inferredProfile = ref('') // AI推断的用户画像
 
 const suggestedGoals = ref<Array<{
   title: string
@@ -116,48 +144,58 @@ const suggestedGoals = ref<Array<{
 
 const selectedIndices = ref<number[]>([])
 
-// 如果已有草稿，恢复数据
-onMounted(() => {
-  if (wizardStore.draft?.goals?.length) {
-    suggestedGoals.value = wizardStore.draft.goals.map(g => ({
-      title: g.title,
-      target_date_quarter: 'Q1', // 简化处理，实际应解析date
-      reason: g.reason
-    }))
-    selectedIndices.value = suggestedGoals.value.map((_, i) => i)
-    showGoals.value = true
+// Placeholder Logic
+const targetPlaceholder = computed(() => {
+  const map: any = {
+    revenue: '请输入目标金额 (万)',
+    product: '请输入目标用户数',
+    influence: '请输入目标粉丝数',
+    growth: '例如: 从后端转AI'
   }
+  return map[goalType.value] || '请输入目标'
+})
+
+const targetUnit = computed(() => {
+  const map: any = { revenue: 'CNY', product: 'Users', influence: 'Fans', growth: '' }
+  return map[goalType.value] || ''
+})
+
+const targetHint = computed(() => {
+  const map: any = {
+    revenue: '普通开发者: 20-50万 / 高手: 50-200万',
+    product: 'MVP验证期: 100-1000 / 增长期: 1w+',
+    influence: '垂直领域: 1w / 大众领域: 10w+',
+    growth: null
+  }
+  return map[goalType.value] || null
+})
+
+const canProceed = computed(() => {
+  return goalType.value && targetValue.value && pathways.value.length > 0
 })
 
 const analyzeNorthStar = async () => {
-  if (!northStar.value.trim()) return
+  if (!canProceed.value) return
   
   loading.value = true
   try {
-    // 1. 如果还没有澄清过，先调用澄清接口
-    if (!clarification.value) {
-      const { is_ambiguous, clarification_question } = await $fetch('/api/wizard/ai/clarify', {
-        method: 'POST',
-        body: { northStar: northStar.value }
-      })
-
-      if (is_ambiguous && clarification_question) {
-        clarification.value = clarification_question
-        loading.value = false
-        return
-      }
-    }
-
-    // 2. 生成目标建议
-    const { suggestions } = await $fetch('/api/wizard/ai/suggest-goals', {
+    // 调用新的 API
+    const response = await $fetch<{
+      inferred_profile: string
+      suggestions: any[]
+    }>('/api/wizard/ai/suggest-goals', {
       method: 'POST',
       body: { 
-        northStar: northStar.value,
-        clarification: clarificationAnswer.value
+        goalType: goalType.value,
+        targetValue: targetValue.value,
+        pathways: pathways.value,
+        additionalContext: additionalDetails.value
       }
     })
 
-    suggestedGoals.value = suggestions
+    // AI 返回
+    suggestedGoals.value = response.suggestions
+    inferredProfile.value = response.inferred_profile || '独立开发者'
     selectedIndices.value = suggestedGoals.value.map((_: any, i: number) => i) // 默认全选
     showGoals.value = true
 
@@ -199,7 +237,7 @@ const confirmGoals = async () => {
   wizardStore.draft = {
     ...wizardStore.draft!,
     northStar: {
-      title: northStar.value + (clarificationAnswer.value ? ` (${clarificationAnswer.value})` : ''),
+      title: `[${goalType.value}] ${targetValue.value} - by ${pathways.value.join(',')}`,
       year: currentYear
     },
     goals: selectedIndices.value.map((i: number) => {
@@ -461,5 +499,22 @@ function calcDateFromQuarter(q: string, year: number): string {
   backdrop-filter: blur(10px);
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.section-label {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.profile-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  color: #a5b4fc;
 }
 </style>
